@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>4th Grade STAAR Math Review</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Nunito', 'Segoe UI', sans-serif; background: #F8FAFC; color: #0F172A; min-height: 100vh; }
+#app { max-width: 680px; margin: 0 auto; padding: 20px 16px 48px; }
+h1, h2 { font-family: 'Fredoka', cursive; font-weight: 600; }
+.home-header { text-align: center; margin-bottom: 24px; }
+.home-header .star { font-size: 48px; line-height: 1; margin-bottom: 8px; }
+.home-header h1 { font-size: 32px; margin-bottom: 4px; }
+.home-header p { color: #64748B; font-size: 14px; font-weight: 600; }
+.topic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(152px, 1fr)); gap: 12px; }
+.topic-card { border-radius: 18px; padding: 16px 14px; cursor: pointer; text-align: left; border-width: 2px; border-style: solid; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: transform 0.15s, box-shadow 0.15s; background: none; }
+.topic-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.13); }
+.tc-emoji { font-size: 28px; line-height: 1; margin-bottom: 8px; }
+.tc-name { font-family: 'Fredoka', cursive; font-weight: 600; font-size: 15px; color: #0F172A; line-height: 1.2; margin-bottom: 4px; }
+.tc-sub { font-size: 11px; color: #64748B; font-weight: 600; margin-bottom: 10px; line-height: 1.3; }
+.tc-badge { font-size: 10px; font-weight: 800; background: white; display: inline-block; padding: 3px 8px; border-radius: 99px; border-width: 1.5px; border-style: solid; }
+.home-footer { text-align: center; font-size: 11px; color: #94A3B8; margin-top: 18px; font-weight: 600; }
+.quiz-topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.back-btn { background: none; border: none; cursor: pointer; color: #94A3B8; font-size: 13px; font-family: 'Nunito', sans-serif; font-weight: 700; padding: 4px 0; }
+.topic-label { font-family: 'Fredoka', cursive; font-weight: 600; font-size: 15px; }
+.score-label { font-family: 'Fredoka', cursive; font-weight: 600; font-size: 15px; color: #0F172A; }
+.progress-bar { background: #F1F5F9; border-radius: 99px; height: 8px; margin-bottom: 6px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 99px; transition: width 0.4s ease; }
+.q-counter { font-size: 12px; color: #94A3B8; font-weight: 700; margin-bottom: 18px; letter-spacing: 0.3px; }
+.question-card { border-radius: 18px; padding: 20px; margin-bottom: 16px; font-size: 16px; font-weight: 700; line-height: 1.6; border-width: 2px; border-style: solid; }
+.options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+.option-btn { background: white; border: 2px solid #E2E8F0; border-radius: 12px; padding: 14px 16px; cursor: pointer; text-align: left; font-size: 14px; color: #1E293B; font-family: 'Nunito', sans-serif; font-weight: 700; transition: transform 0.15s; width: 100%; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+.option-btn:hover:not([disabled]) { transform: translateX(3px); }
+.option-btn.correct { background: #F0FDF4 !important; border-color: #22C55E !important; color: #15803D !important; }
+.option-btn.wrong   { background: #FFF1F2 !important; border-color: #F43F5E !important; color: #9F1239 !important; }
+.feedback { border-radius: 14px; padding: 14px 16px; margin-bottom: 14px; border-width: 2px; border-style: solid; }
+.feedback-title { font-family: 'Fredoka', cursive; font-weight: 600; font-size: 16px; margin-bottom: 6px; }
+.feedback-exp { font-size: 13px; color: #374151; line-height: 1.6; font-weight: 600; }
+.feedback.correct-fb { background: #F0FDF4; border-color: #86EFAC; }
+.feedback.wrong-fb   { background: #FFF1F2; border-color: #FDA4AF; }
+.feedback.correct-fb .feedback-title { color: #15803D; }
+.feedback.wrong-fb   .feedback-title { color: #BE123C; }
+.next-btn { width: 100%; color: white; border: none; border-radius: 14px; padding: 16px; font-size: 16px; font-family: 'Fredoka', cursive; font-weight: 600; cursor: pointer; transition: transform 0.1s; }
+.next-btn:hover { transform: translateY(-1px); }
+.results-screen { text-align: center; max-width: 460px; margin: 0 auto; }
+.results-card { border-radius: 24px; padding: 32px 28px; border-width: 3px; border-style: solid; }
+.results-icon { font-size: 60px; line-height: 1; margin-bottom: 10px; }
+.results-score { font-size: 32px; color: #0F172A; margin-bottom: 6px; }
+.results-stars { font-size: 28px; margin: 10px 0; letter-spacing: 4px; }
+.results-pct { display: inline-block; font-weight: 800; font-size: 20px; padding: 8px 20px; border-radius: 99px; margin-bottom: 14px; border-width: 2px; border-style: solid; background: white; }
+.results-msg { color: #475569; font-size: 14px; line-height: 1.6; font-weight: 600; margin-bottom: 24px; }
+.results-btns { display: flex; flex-direction: column; gap: 10px; }
+.retry-btn { color: white; border: none; border-radius: 14px; padding: 16px; font-size: 16px; font-family: 'Fredoka', cursive; font-weight: 600; cursor: pointer; }
+.home-btn { background: white; color: #475569; border: 2px solid #E2E8F0; border-radius: 14px; padding: 14px; font-size: 15px; font-family: 'Fredoka', cursive; font-weight: 600; cursor: pointer; }
+.results-teks { margin-top: 14px; font-size: 12px; color: #94A3B8; font-weight: 700; }
+/* MIX SCREEN */
+.mix-header { text-align: center; margin-bottom: 20px; }
+.mix-header h2 { font-size: 26px; color: #0F172A; margin-bottom: 4px; }
+.mix-header p { color: #64748B; font-size: 13px; font-weight: 600; }
+.mix-controls { display: flex; gap: 8px; justify-content: center; margin-bottom: 14px; flex-wrap: wrap; }
+.mix-ctrl-btn { background: white; border: 2px solid #E2E8F0; border-radius: 99px; padding: 6px 16px; font-size: 12px; font-family: 'Nunito', sans-serif; font-weight: 800; cursor: pointer; color: #475569; transition: all 0.15s; }
+.mix-ctrl-btn:hover { border-color: #94A3B8; color: #0F172A; }
+.mix-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(152px, 1fr)); gap: 10px; margin-bottom: 20px; }
+.mix-card { border-radius: 16px; padding: 14px 12px; cursor: pointer; text-align: left; border-width: 2px; border-style: solid; background: white; border-color: #E2E8F0; transition: all 0.15s; position: relative; }
+.mix-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.mix-card.selected { border-width: 3px; }
+.mix-card .check { position: absolute; top: 10px; right: 10px; width: 20px; height: 20px; border-radius: 50%; border: 2px solid #CBD5E1; background: white; display: flex; align-items: center; justify-content: center; font-size: 11px; transition: all 0.15s; }
+.mix-card.selected .check { border-color: transparent; background: #22C55E; color: white; }
+.mix-card .mc-emoji { font-size: 24px; line-height: 1; margin-bottom: 6px; }
+.mix-card .mc-name { font-family: 'Fredoka', cursive; font-weight: 600; font-size: 14px; color: #0F172A; line-height: 1.2; }
+.mix-count-row { text-align: center; margin-bottom: 20px; }
+.mix-count-row p { font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 10px; }
+.mix-count-btns { display: flex; gap: 8px; justify-content: center; }
+.cnt-btn { background: white; border: 2px solid #E2E8F0; border-radius: 10px; padding: 8px 20px; font-size: 14px; font-family: 'Fredoka', cursive; font-weight: 600; cursor: pointer; color: #475569; transition: all 0.15s; }
+.cnt-btn.active { border-color: #6366F1; background: #EEF2FF; color: #4338CA; border-width: 3px; }
+.mix-start-btn { width: 100%; background: #4F46E5; color: white; border: none; border-radius: 14px; padding: 16px; font-size: 17px; font-family: 'Fredoka', cursive; font-weight: 600; cursor: pointer; transition: transform 0.1s, opacity 0.15s; }
+.mix-start-btn:hover:not(:disabled) { transform: translateY(-1px); }
+.mix-start-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.mix-back-btn { display: block; text-align: center; margin-top: 12px; background: none; border: none; color: #94A3B8; font-size: 13px; font-family: 'Nunito', sans-serif; font-weight: 700; cursor: pointer; }
+/* QUESTION TOPIC TAG */
+.q-topic-tag { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 99px; margin-bottom: 10px; border-width: 1.5px; border-style: solid; background: white; }
+/* MIXED RESULTS */
+.mixed-topics-list { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 18px; }
+.mixed-topic-chip { font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 99px; border-width: 1.5px; border-style: solid; background: white; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const QUESTION_BANK = {
+place_value: [
+  {q:"Which shows 246,891 in expanded form?",opts:["A) 200,000 + 40,000 + 6,000 + 800 + 90 + 1","B) 200,000 + 46,000 + 800 + 91","C) 20,000 + 40,000 + 6,000 + 800 + 91","D) 246,000 + 891"],ans:0,exp:"Expanded form breaks each digit into its place value. 2=200,000, 4=40,000, 6=6,000, 8=800, 9=90, 1=1."},
+  {q:"What is the value of the digit 8 in 382,547?",opts:["A) 8","B) 80,000","C) 8,000","D) 800,000"],ans:1,exp:"The digit 8 is in the ten-thousands place, so its value is 8 × 10,000 = 80,000."},
+  {q:"Which comparison is correct?",opts:["A) 4,523,106 > 4,532,106","B) 723,456 < 723,546","C) 1,234,567 > 1,243,567","D) 89,432 > 894,320"],ans:1,exp:"Compare digits left to right. In 723,456 vs 723,546, the hundreds digit 4 < 5, so 723,456 < 723,546."},
+  {q:"A number is written as (6 × 100,000) + (4 × 10,000) + (3 × 1,000) + (7 × 10) + (2 × 1). What is the number?",opts:["A) 643,072","B) 6,430,072","C) 640,372","D) 643,702"],ans:0,exp:"600,000 + 40,000 + 3,000 + 70 + 2 = 643,072."},
+  {q:"Which decimal is equivalent to 47/100?",opts:["A) 4.7","B) 0.047","C) 0.47","D) 47.0"],ans:2,exp:"47/100 means 47 hundredths. Written as a decimal: 0.47."},
+  {q:"Which number is between 3.4 and 3.5?",opts:["A) 3.39","B) 3.45","C) 3.51","D) 3.05"],ans:1,exp:"3.45 is greater than 3.40 and less than 3.50, so it falls between 3.4 and 3.5."},
+  {q:"Which statement is true about 53,000 and 5,300?",opts:["A) 53,000 is 10 times as much as 5,300","B) 5,300 is 10 times as much as 53,000","C) 53,000 is 100 times as much as 5,300","D) They are equal"],ans:0,exp:"53,000 ÷ 5,300 = 10, so 53,000 is 10 times as much as 5,300."},
+  {q:"What is 8.09 written as a mixed number?",opts:["A) 8 and 9/100","B) 8 and 9/10","C) 89/100","D) 8 and 90/100"],ans:0,exp:"8.09 = 8 whole and 9 hundredths = 8 and 9/100."},
+  {q:"Which number has the digit 7 in the ten-thousands place?",opts:["A) 7,342,105","B) 573,421","C) 374,215","D) 37,142"],ans:2,exp:"In 374,215, counting from the right: ones=5, tens=1, hundreds=2, thousands=4, ten-thousands=7."},
+  {q:"What is the correct order from least to greatest?  45,231 | 45,321 | 45,123 | 45,213",opts:["A) 45,123 < 45,213 < 45,231 < 45,321","B) 45,231 < 45,123 < 45,213 < 45,321","C) 45,321 < 45,231 < 45,213 < 45,123","D) 45,123 < 45,231 < 45,213 < 45,321"],ans:0,exp:"Compare the hundreds digit: 1 < 2. For the two with hundreds=2, compare tens: 1 < 3. Order: 45,123 < 45,213 < 45,231 < 45,321."},
+  {q:"What is the value of the digit 5 in 1,567,234?",opts:["A) 5,000","B) 500,000","C) 50,000","D) 5,000,000"],ans:1,exp:"In 1,567,234, the digit 5 is in the hundred-thousands place. Its value is 5 × 100,000 = 500,000."},
+  {q:"Which number is one hundred thousand more than 3,456,789?",opts:["A) 3,556,789","B) 3,466,789","C) 4,456,789","D) 3,457,789"],ans:0,exp:"3,456,789 + 100,000 = 3,556,789. Only the hundred-thousands digit changes: 4 becomes 5."},
+  {q:"A number has 4 hundred-thousands, 3 ten-thousands, 5 hundreds, 2 tens, and 7 ones. What is the number?",opts:["A) 430,527","B) 4,030,527","C) 403,527","D) 43,527"],ans:0,exp:"400,000 + 30,000 + 500 + 20 + 7 = 430,527."},
+  {q:"Which correctly compares these decimals?  4.56 ___ 4.5",opts:["A) 4.56 < 4.5","B) 4.56 = 4.5","C) 4.56 > 4.5","D) Cannot be determined"],ans:2,exp:"4.5 = 4.50. Comparing hundredths: 56 > 50, so 4.56 > 4.50."},
+  {q:"What is 0.7 written as a fraction?",opts:["A) 7/1000","B) 7/10","C) 7/100","D) 70/10"],ans:1,exp:"0.7 means 7 tenths. Written as a fraction: 7/10."},
+  {q:"The number 6,000,000 is how many times greater than 600?",opts:["A) 100","B) 1,000","C) 10,000","D) 100,000"],ans:2,exp:"6,000,000 ÷ 600 = 10,000. So 6,000,000 is 10,000 times greater than 600."},
+  {q:"Which number, when rounded to the nearest ten-thousand, gives 450,000?",opts:["A) 441,500","B) 448,200","C) 455,600","D) 443,200"],ans:1,exp:"448,200: the ten-thousands digit is 4, and the thousands digit is 8 (≥5), so it rounds up to 450,000."},
+  {q:"In the number 7,294,308, which digit is in the millions place?",opts:["A) 2","B) 9","C) 4","D) 7"],ans:3,exp:"Reading 7,294,308 from left: 7 is in the millions place, 2 in hundred-thousands, 9 in ten-thousands."},
+  {q:"What is the word form of 3,050,009?",opts:["A) Three million, fifty thousand, nine","B) Three million, five thousand, nine","C) Thirty million, fifty, nine","D) Three hundred fifty thousand, nine"],ans:0,exp:"3,050,009 = 3 millions + 50 thousands + 9 ones = three million, fifty thousand, nine."},
+  {q:"Which number is ten times greater than 4,820?",opts:["A) 482","B) 4,8200","C) 48,200","D) 482,000"],ans:2,exp:"4,820 × 10 = 48,200. Multiplying by 10 shifts each digit one place to the left."},
+  {q:"What is 0.35 written as a fraction?",opts:["A) 35/10","B) 3/5","C) 35/100","D) 3/50"],ans:2,exp:"0.35 means 35 hundredths = 35/100."},
+  {q:"Which shows numbers in order from greatest to least?",opts:["A) 2,345,678 > 2,354,678 > 2,453,678 > 2,543,678","B) 2,543,678 > 2,453,678 > 2,354,678 > 2,345,678","C) 2,345,678 > 2,543,678 > 2,354,678 > 2,453,678","D) 2,453,678 > 2,543,678 > 2,354,678 > 2,345,678"],ans:1,exp:"Compare the ten-thousands digit: 5>4>3>4 — wait, compare left to right. 2,543,678 has the largest ten-thousands (5), then 2,453,678 (4), then 2,354,678 (3), then 2,345,678 (3 then 4)."},
+  {q:"The digit 4 appears twice in 944,712. What is the difference between the values of the two 4s?",opts:["A) 0","B) 36,000","C) 3,600","D) 40,000"],ans:1,exp:"First 4 is in the ten-thousands place = 40,000. Second 4 is in the thousands place = 4,000. Difference: 40,000 − 4,000 = 36,000."},
+  {q:"What decimal is equivalent to 9/10?",opts:["A) 0.09","B) 9.0","C) 0.9","D) 0.19"],ans:2,exp:"9/10 means 9 tenths. Written as a decimal: 0.9."},
+  {q:"Which number has the greatest value?",opts:["A) 5,678,901","B) 5,786,901","C) 5,768,901","D) 5,876,901"],ans:3,exp:"Compare the hundred-thousands digit: 5,876,901 has 8 in the hundred-thousands place, which is greater than 7 or 6."},
+  {q:"A number in expanded form is: (3 × 1,000,000) + (5 × 10,000) + (8 × 100) + (6 × 1). What is the number?",opts:["A) 3,050,806","B) 3,500,806","C) 3,050,860","D) 3,005,806"],ans:0,exp:"3,000,000 + 50,000 + 800 + 6 = 3,050,806."},
+  {q:"Which decimal is greater than 0.6 but less than 0.7?",opts:["A) 0.06","B) 0.65","C) 0.76","D) 0.56"],ans:1,exp:"0.65 is between 0.60 and 0.70. The others are outside that range."},
+  {q:"In the number 2,748,365, what is the value of the digit 7?",opts:["A) 7,000","B) 700,000","C) 70,000","D) 7,000,000"],ans:1,exp:"In 2,748,365: 2=millions, 7=hundred-thousands. Value = 7 × 100,000 = 700,000."},
+  {q:"Which of the following equals 0.04?",opts:["A) 4/100","B) 4/10","C) 4/1000","D) 40/100"],ans:0,exp:"0.04 means 4 hundredths = 4/100."},
+  {q:"What number is 10,000 less than 5,473,208?",opts:["A) 5,374,208","B) 5,463,208","C) 5,473,108","D) 5,472,208"],ans:1,exp:"5,473,208 − 10,000 = 5,463,208. The ten-thousands digit decreases from 7 to 6."},
+],
+fractions: [
+  {q:"Which fraction is equivalent to 3/4?",opts:["A) 6/9","B) 9/12","C) 8/12","D) 6/10"],ans:1,exp:"Multiply both numerator and denominator by 3: 3×3=9, 4×3=12, giving 9/12."},
+  {q:"Compare: 2/5 ___ 3/8. Which symbol makes this true?",opts:["A) <","B) =","C) >","D) Cannot be determined"],ans:2,exp:"Convert to same denominator: 2/5 = 16/40 and 3/8 = 15/40. Since 16 > 15, we have 2/5 > 3/8."},
+  {q:"What mixed number is equivalent to 17/5?",opts:["A) 2 and 7/5","B) 3 and 2/5","C) 3 and 1/5","D) 2 and 3/5"],ans:1,exp:"Divide 17 ÷ 5 = 3 remainder 2. So 17/5 = 3 and 2/5."},
+  {q:"What is 5/10 + 3/10?",opts:["A) 8/20","B) 8/10","C) 15/10","D) 2/10"],ans:1,exp:"When denominators are the same, add the numerators: 5 + 3 = 8. The denominator stays 10, giving 8/10."},
+  {q:"What is the decimal equivalent of 3/10?",opts:["A) 3.0","B) 0.03","C) 0.3","D) 30.0"],ans:2,exp:"3/10 means 3 tenths. Written as a decimal: 0.3."},
+  {q:"Which shows fractions in order from least to greatest?",opts:["A) 1/2, 2/3, 3/4","B) 2/3, 1/2, 3/4","C) 3/4, 2/3, 1/2","D) 1/2, 3/4, 2/3"],ans:0,exp:"Convert to decimals: 1/2=0.5, 2/3≈0.667, 3/4=0.75. Least to greatest: 1/2 < 2/3 < 3/4."},
+  {q:"Mia ate 3/8 of a pizza and Tom ate 2/8. What fraction did they eat in all?",opts:["A) 5/16","B) 5/8","C) 6/8","D) 1/8"],ans:1,exp:"Same denominator: 3/8 + 2/8 = 5/8."},
+  {q:"Which decimal is equal to 65/100?",opts:["A) 6.5","B) 0.065","C) 0.65","D) 65.0"],ans:2,exp:"65/100 = 65 hundredths = 0.65."},
+  {q:"A ribbon is 7/4 yards long. What is this as a mixed number?",opts:["A) 2 and 3/4","B) 1 and 3/4","C) 1 and 2/4","D) 2 and 1/4"],ans:1,exp:"7 ÷ 4 = 1 remainder 3. So 7/4 = 1 and 3/4."},
+  {q:"Which fraction is closest to 1 whole?",opts:["A) 3/8","B) 2/5","C) 7/8","D) 1/2"],ans:2,exp:"Convert to decimals: 3/8=0.375, 2/5=0.4, 7/8=0.875, 1/2=0.5. The fraction 7/8 is closest to 1."},
+  {q:"What is 9/4 written as a mixed number?",opts:["A) 1 and 3/4","B) 2 and 1/4","C) 2 and 3/4","D) 1 and 1/4"],ans:1,exp:"9 ÷ 4 = 2 remainder 1. So 9/4 = 2 and 1/4."},
+  {q:"Which fraction is less than 1/2?",opts:["A) 3/5","B) 4/7","C) 3/8","D) 5/9"],ans:2,exp:"Convert to decimals: 3/5=0.6, 4/7≈0.57, 3/8=0.375, 5/9≈0.55. Only 3/8 is less than 0.5."},
+  {q:"What is 1 and 2/5 written as an improper fraction?",opts:["A) 3/5","B) 7/5","C) 12/5","D) 2/5"],ans:1,exp:"(1 × 5) + 2 = 7. So 1 and 2/5 = 7/5."},
+  {q:"Sam ate 1/4 of a pie. What decimal shows how much he ate?",opts:["A) 0.14","B) 0.4","C) 0.25","D) 0.125"],ans:2,exp:"1/4 = 25/100 = 0.25."},
+  {q:"Which two fractions are equivalent?",opts:["A) 1/3 and 2/5","B) 2/4 and 3/6","C) 3/4 and 4/5","D) 1/2 and 2/3"],ans:1,exp:"2/4 = 1/2 and 3/6 = 1/2. They are both equal to 1/2, so they are equivalent."},
+  {q:"Which fraction is greater than 3/4?",opts:["A) 2/3","B) 7/10","C) 5/6","D) 1/2"],ans:2,exp:"Convert: 3/4=0.75, 2/3≈0.667, 7/10=0.7, 5/6≈0.833. Only 5/6 is greater than 3/4."},
+  {q:"A pizza is cut into 8 equal slices. John ate 3 slices and Maria ate 2 slices. What fraction of the pizza is left?",opts:["A) 5/8","B) 3/8","C) 1/2","D) 2/8"],ans:1,exp:"Total eaten: 3 + 2 = 5 slices. Left: 8 − 5 = 3 slices = 3/8."},
+  {q:"0.6 is equal to which fraction?",opts:["A) 6/100","B) 3/5","C) 6/1000","D) 1/6"],ans:1,exp:"0.6 = 6/10 = 3/5."},
+  {q:"What is 11/8 as a mixed number?",opts:["A) 1 and 3/8","B) 2 and 3/8","C) 1 and 1/8","D) 2 and 1/8"],ans:0,exp:"11 ÷ 8 = 1 remainder 3. So 11/8 = 1 and 3/8."},
+  {q:"Put these in order from least to greatest: 3/8, 1/2, 1/4",opts:["A) 1/4, 3/8, 1/2","B) 3/8, 1/4, 1/2","C) 1/2, 3/8, 1/4","D) 1/4, 1/2, 3/8"],ans:0,exp:"Convert to decimals: 1/4=0.25, 3/8=0.375, 1/2=0.5. Order: 1/4 < 3/8 < 1/2."},
+  {q:"What fraction of a dollar is 25 cents?",opts:["A) 25/10","B) 1/4","C) 1/5","D) 2/5"],ans:1,exp:"25 cents out of 100 cents = 25/100 = 1/4."},
+  {q:"A jar is 3/5 full of marbles. How much of the jar is EMPTY?",opts:["A) 3/5","B) 2/5","C) 1/5","D) 4/5"],ans:1,exp:"Full jar = 5/5. Empty = 5/5 − 3/5 = 2/5."},
+  {q:"What is 0.75 written as a fraction?",opts:["A) 7/5","B) 75/10","C) 3/4","D) 7/4"],ans:2,exp:"0.75 = 75/100 = 3/4."},
+  {q:"A recipe uses 3/8 cup of sugar for one batch. How much sugar is needed for 2 batches?",opts:["A) 6/16","B) 6/8","C) 3/16","D) 5/8"],ans:1,exp:"3/8 × 2 = 6/8 (also written as 3/4)."},
+  {q:"Which fraction is between 1/3 and 2/3?",opts:["A) 1/4","B) 1/2","C) 3/4","D) 1/6"],ans:1,exp:"1/3 ≈ 0.333 and 2/3 ≈ 0.667. 1/2 = 0.5 falls between them."},
+  {q:"Anna has completed 4/5 of her homework. What decimal represents this?",opts:["A) 0.45","B) 4.5","C) 0.8","D) 0.04"],ans:2,exp:"4/5 = 8/10 = 0.8."},
+  {q:"Which shows 1/6, 5/6, and 3/6 in order from greatest to least?",opts:["A) 1/6, 3/6, 5/6","B) 5/6, 3/6, 1/6","C) 3/6, 5/6, 1/6","D) 5/6, 1/6, 3/6"],ans:1,exp:"Same denominator — compare numerators: 5 > 3 > 1. Order from greatest: 5/6, 3/6, 1/6."},
+  {q:"What fraction of 20 is 15?",opts:["A) 1/4","B) 3/4","C) 2/5","D) 4/5"],ans:1,exp:"15 out of 20 = 15/20 = 3/4."},
+  {q:"Which decimal shows three and five hundredths?",opts:["A) 3.50","B) 3.05","C) 0.35","D) 35.0"],ans:1,exp:"Three and five hundredths = 3 + 5/100 = 3.05."},
+  {q:"What is 6/10 + 2/100 written as a decimal?",opts:["A) 0.62","B) 0.08","C) 6.2","D) 0.602"],ans:0,exp:"6/10 = 0.60 and 2/100 = 0.02. Adding: 0.60 + 0.02 = 0.62."},
+],
+multiply: [
+  {q:"What is 347 × 6?",opts:["A) 2,082","B) 2,002","C) 2,182","D) 1,982"],ans:0,exp:"347 × 6: (300×6) + (40×6) + (7×6) = 1,800 + 240 + 42 = 2,082."},
+  {q:"What is 23 × 15?",opts:["A) 345","B) 335","C) 245","D) 365"],ans:0,exp:"23 × 15 = (23 × 10) + (23 × 5) = 230 + 115 = 345."},
+  {q:"There are 156 crayons shared equally among 6 boxes. How many crayons are in each box?",opts:["A) 24","B) 26","C) 28","D) 22"],ans:1,exp:"156 ÷ 6 = 26. Check: 6 × 26 = 156."},
+  {q:"What is 2,438 ÷ 7?",opts:["A) 348 R2","B) 347 R5","C) 349 R1","D) 346 R6"],ans:0,exp:"7 × 348 = 2,436. 2,438 − 2,436 = 2. So 2,438 ÷ 7 = 348 R2."},
+  {q:"What is 56 × 32?",opts:["A) 1,592","B) 1,692","C) 1,792","D) 1,892"],ans:2,exp:"56 × 32 = (56 × 30) + (56 × 2) = 1,680 + 112 = 1,792."},
+  {q:"A teacher bought 6 packs of colored pencils with 48 pencils each. How many pencils in all?",opts:["A) 288","B) 254","C) 308","D) 268"],ans:0,exp:"48 × 6 = 288."},
+  {q:"Which expression has the same value as 63 ÷ 9?",opts:["A) 9 × 7","B) 9 + 7","C) 63 − 9","D) 9 × 6"],ans:0,exp:"Division and multiplication are inverse operations. 63 ÷ 9 = 7, and 9 × 7 = 63."},
+  {q:"What is 1,752 ÷ 8?",opts:["A) 219","B) 209","C) 229","D) 218"],ans:0,exp:"8 × 219 = 1,752. Check: 8×200=1,600, 8×19=152, 1,600+152=1,752."},
+  {q:"A baker made 4 batches of cookies with 36 per batch, then split them equally into 9 bags. How many cookies per bag?",opts:["A) 18","B) 16","C) 14","D) 20"],ans:1,exp:"Step 1: 4 × 36 = 144 total cookies. Step 2: 144 ÷ 9 = 16 cookies per bag."},
+  {q:"What is 864 ÷ 6?",opts:["A) 144","B) 134","C) 154","D) 124"],ans:0,exp:"6 × 144 = 864. Check: 6×100=600, 6×44=264, 600+264=864."},
+  {q:"What is 4,215 × 3?",opts:["A) 12,645","B) 12,545","C) 12,745","D) 12,445"],ans:0,exp:"4,215 × 3: (4,000×3)+(200×3)+(15×3) = 12,000 + 600 + 45 = 12,645."},
+  {q:"What is 82 × 46?",opts:["A) 3,672","B) 3,562","C) 3,772","D) 3,462"],ans:2,exp:"82 × 46 = (82 × 40) + (82 × 6) = 3,280 + 492 = 3,772."},
+  {q:"A box holds 144 crayons. If there are 8 rows, how many crayons are in each row?",opts:["A) 16","B) 18","C) 24","D) 12"],ans:1,exp:"144 ÷ 8 = 18."},
+  {q:"What multiplication equation can check 312 ÷ 4 = 78?",opts:["A) 78 × 4 = 312","B) 312 × 4 = 78","C) 4 × 312 = 78","D) 312 ÷ 78 = 4"],ans:0,exp:"Multiplication is the inverse of division: 78 × 4 = 312."},
+  {q:"What is 3,619 ÷ 7?",opts:["A) 516 R7","B) 517","C) 516 R6","D) 518 R3"],ans:1,exp:"7 × 517 = 3,619. Check: 7×500=3,500, 7×17=119, 3,500+119=3,619."},
+  {q:"What is the product of 500 × 70?",opts:["A) 3,500","B) 35,000","C) 350","D) 350,000"],ans:1,exp:"500 × 70 = 35,000. Think: 5 × 7 = 35, then add the three zeros: 35,000."},
+  {q:"Which expression equals 360?",opts:["A) 40 × 9","B) 30 × 9","C) 40 × 8","D) 30 × 8"],ans:0,exp:"40 × 9 = 360."},
+  {q:"What is 7,200 ÷ 9?",opts:["A) 80","B) 800","C) 8,000","D) 700"],ans:1,exp:"7,200 ÷ 9 = 800. Think: 72 ÷ 9 = 8, then add two zeros: 800."},
+  {q:"A farmer plants corn in 36 rows with 124 seeds per row. How many seeds does he plant?",opts:["A) 4,464","B) 4,364","C) 4,564","D) 4,264"],ans:0,exp:"36 × 124 = (36 × 100) + (36 × 24) = 3,600 + 864 = 4,464."},
+  {q:"What is 4,932 ÷ 4?",opts:["A) 1,233","B) 1,243","C) 1,253","D) 1,223"],ans:0,exp:"4 × 1,233 = 4,932. Check: 4×1,000=4,000, 4×233=932, 4,000+932=4,932."},
+  {q:"Which number sentence belongs to the same fact family as 8 × 7 = 56?",opts:["A) 56 ÷ 8 = 7","B) 8 + 7 = 15","C) 56 × 7 = 8","D) 8 − 7 = 1"],ans:0,exp:"Fact families use the same three numbers. Since 8 × 7 = 56, then 56 ÷ 8 = 7 and 56 ÷ 7 = 8."},
+  {q:"What is 24 × 25?",opts:["A) 500","B) 550","C) 600","D) 650"],ans:2,exp:"24 × 25 = 24 × 100 ÷ 4 = 2,400 ÷ 4 = 600."},
+  {q:"A school bought 9 packs of construction paper with 250 sheets each. How many sheets in all?",opts:["A) 2,050","B) 2,250","C) 2,500","D) 1,950"],ans:1,exp:"9 × 250 = 2,250."},
+  {q:"Which division problem has a remainder of 3?",opts:["A) 25 ÷ 5","B) 35 ÷ 8","C) 42 ÷ 6","D) 27 ÷ 3"],ans:1,exp:"35 ÷ 8 = 4 R3. Check: 8 × 4 = 32, and 35 − 32 = 3."},
+  {q:"What is 6,300 ÷ 7?",opts:["A) 90","B) 900","C) 9,000","D) 800"],ans:1,exp:"6,300 ÷ 7 = 900. Think: 63 ÷ 7 = 9, then add two zeros: 900."},
+  {q:"A shipping company needs to send 1,200 items. Each box holds 48 items. How many boxes are needed?",opts:["A) 20","B) 25","C) 30","D) 40"],ans:1,exp:"1,200 ÷ 48 = 25. Check: 48 × 25 = 1,200."},
+  {q:"There are 275 students going on a trip. Each van holds 9 students. How many vans are needed?",opts:["A) 30 vans","B) 31 vans","C) 32 vans","D) 29 vans"],ans:1,exp:"275 ÷ 9 = 30 R5. Since 5 students are left over, a 31st van is needed."},
+  {q:"What is 36 × 50?",opts:["A) 180","B) 1,800","C) 18,000","D) 360"],ans:1,exp:"36 × 50 = 36 × 5 × 10 = 180 × 10 = 1,800."},
+  {q:"A shelf holds 32 books. A library has 14 shelves. How many books can be stored?",opts:["A) 428","B) 448","C) 468","D) 388"],ans:1,exp:"32 × 14 = (32 × 10) + (32 × 4) = 320 + 128 = 448."},
+  {q:"What is 5,040 ÷ 6?",opts:["A) 840","B) 804","C) 720","D) 860"],ans:0,exp:"6 × 840 = 5,040. Check: 6×800=4,800, 6×40=240, 4,800+240=5,040."},
+],
+wordprob: [
+  {q:"Maya has 125 stickers. She gives 38 to her sister and buys 54 more. How many stickers does Maya have now?",opts:["A) 141","B) 87","C) 163","D) 217"],ans:0,exp:"125 − 38 = 87, then 87 + 54 = 141."},
+  {q:"A school ordered 12 boxes of markers with 24 per box. The school uses 85 markers for a project. How many markers are left?",opts:["A) 203","B) 193","C) 288","D) 373"],ans:0,exp:"Step 1: 12 × 24 = 288 total. Step 2: 288 − 85 = 203 left."},
+  {q:"Jacob earns $8 per hour babysitting — 6 hours Saturday and 4 hours Sunday. How much does he earn in all?",opts:["A) $48","B) $32","C) $80","D) $68"],ans:2,exp:"Total hours: 6 + 4 = 10. Total earned: 10 × $8 = $80."},
+  {q:"245 students are going on a field trip. Each bus holds 36 students. How many buses are needed?",opts:["A) 6","B) 7","C) 8","D) 5"],ans:1,exp:"245 ÷ 36 = 6 R29. Since 29 students remain, a 7th bus is needed."},
+  {q:"At a carnival, 3 friends split $54 admission equally. Each also spent $4 on a snack. How much did each person spend in all?",opts:["A) $14","B) $18","C) $22","D) $58"],ans:2,exp:"$54 ÷ 3 = $18 each for admission. $18 + $4 = $22 each total."},
+  {q:"A garden has 8 rows of tomato plants with 15 plants per row. 37 plants died. How many are still alive?",opts:["A) 83","B) 93","C) 77","D) 103"],ans:0,exp:"Step 1: 8 × 15 = 120 total plants. Step 2: 120 − 37 = 83 still alive."},
+  {q:"Lily has 3 times as many books as Sam. Sam has 14 books. How many do they have together?",opts:["A) 42","B) 56","C) 48","D) 36"],ans:1,exp:"Lily: 3 × 14 = 42. Together: 42 + 14 = 56."},
+  {q:"A baker needs at least 200 muffins. She makes 15 per batch. What is the fewest batches she needs?",opts:["A) 13","B) 14","C) 15","D) 12"],ans:1,exp:"200 ÷ 15 = 13 R5. She needs 14 batches to make at least 200."},
+  {q:"There are 286 chairs to set up. 6 students each set up the same number. How many chairs are left over?",opts:["A) 4","B) 2","C) 3","D) 6"],ans:0,exp:"286 ÷ 6 = 47 R4. Check: 6 × 47 = 282, and 286 − 282 = 4."},
+  {q:"A store has 5 shelves holding 48 books each. The store sold 67 books last week. How many books remain?",opts:["A) 173","B) 163","C) 183","D) 213"],ans:0,exp:"Step 1: 5 × 48 = 240. Step 2: 240 − 67 = 173."},
+  {q:"A librarian has 348 books to put on shelves that hold 24 each. How many full shelves, and how many books are left over?",opts:["A) 14 shelves, R12","B) 15 shelves, R0","C) 13 shelves, R12","D) 14 shelves, R0"],ans:0,exp:"348 ÷ 24 = 14 R12. Check: 24 × 14 = 336, and 348 − 336 = 12."},
+  {q:"A movie theater has 28 rows with 34 seats. 585 seats are taken. How many seats are empty?",opts:["A) 367","B) 476","C) 585","D) 952"],ans:0,exp:"Total seats: 28 × 34 = 952. Empty: 952 − 585 = 367."},
+  {q:"Emma saved $12 each week for 8 weeks, then spent $37 on a book. How much does she have left?",opts:["A) $55","B) $96","C) $59","D) $49"],ans:2,exp:"8 × $12 = $96. $96 − $37 = $59."},
+  {q:"A theater has 4 sections with 125 seats each. 87 people are seated. How many seats are still empty?",opts:["A) 413","B) 87","C) 213","D) 500"],ans:0,exp:"4 × 125 = 500 seats. 500 − 87 = 413 empty."},
+  {q:"Tom read 15 pages every day for 3 weeks. How many pages did he read in all?",opts:["A) 315","B) 45","C) 105","D) 215"],ans:0,exp:"3 weeks = 21 days. 15 × 21 = 315 pages."},
+  {q:"A store sold 2,340 items over 6 days, the same amount each day. How many items per day?",opts:["A) 380","B) 390","C) 400","D) 370"],ans:1,exp:"2,340 ÷ 6 = 390."},
+  {q:"Notebooks cost $3 each and pens cost $2 each. A teacher buys 12 notebooks and 8 pens. How much in all?",opts:["A) $52","B) $50","C) $44","D) $60"],ans:0,exp:"12 × $3 = $36 for notebooks. 8 × $2 = $16 for pens. Total: $36 + $16 = $52."},
+  {q:"Tyler had 325 trading cards. He gave 47 to a friend and received 5 packs of 12 cards. How many does Tyler have now?",opts:["A) 318","B) 338","C) 348","D) 308"],ans:1,exp:"325 − 47 = 278. Then 278 + (5 × 12) = 278 + 60 = 338."},
+  {q:"Sarah has 4 times as many stamps as her brother. Together they have 120 stamps. How many stamps does Sarah have?",opts:["A) 30","B) 80","C) 96","D) 90"],ans:2,exp:"Let brother = x. Then 4x + x = 5x = 120, so x = 24. Sarah = 4 × 24 = 96."},
+  {q:"A box of pencils has 144 pencils. A teacher uses 6 per week. How many weeks will the box last?",opts:["A) 20","B) 22","C) 24","D) 26"],ans:2,exp:"144 ÷ 6 = 24 weeks."},
+  {q:"During a sale, shirts cost $15 each. Emma bought 3 shirts and used a $10 coupon. How much did Emma pay?",opts:["A) $35","B) $45","C) $55","D) $30"],ans:0,exp:"3 × $15 = $45. $45 − $10 coupon = $35."},
+  {q:"A factory makes 36 cars each day. How many cars does it make in 4 weeks?",opts:["A) 1,008","B) 864","C) 756","D) 1,152"],ans:0,exp:"4 weeks = 28 days. 36 × 28 = (36 × 20) + (36 × 8) = 720 + 288 = 1,008."},
+  {q:"Three friends share the cost of a $78 gift equally. Each also pays $4 for wrapping. How much does each person pay?",opts:["A) $26","B) $30","C) $82","D) $34"],ans:1,exp:"$78 ÷ 3 = $26 each for the gift. $26 + $4 = $30 each total."},
+  {q:"Anna ran 2,400 m each day for 5 days. Ben ran 1,500 m each day for the same 5 days. How many more meters did Anna run?",opts:["A) 900 m","B) 4,500 m","C) 3,000 m","D) 6,000 m"],ans:1,exp:"Anna: 2,400 × 5 = 12,000. Ben: 1,500 × 5 = 7,500. Difference: 12,000 − 7,500 = 4,500 m."},
+  {q:"144 cookies are divided equally among 3 classes. Each class divides theirs equally among 8 students. How many cookies per student?",opts:["A) 4","B) 6","C) 8","D) 12"],ans:1,exp:"144 ÷ 3 = 48 per class. 48 ÷ 8 = 6 per student."},
+  {q:"There are 9 players on a baseball team. A league has 16 teams. How many players are in the league?",opts:["A) 144","B) 108","C) 160","D) 126"],ans:0,exp:"9 × 16 = 144 players."},
+  {q:"A class collected canned food for 4 weeks. They collected 35, 48, 27, and 42 cans. How many total cans did they collect?",opts:["A) 142","B) 152","C) 162","D) 132"],ans:1,exp:"35 + 48 + 27 + 42 = 152."},
+  {q:"A family drives 65 miles per hour for 3 hours, then 50 miles per hour for 2 hours. How many total miles did they drive?",opts:["A) 195","B) 295","C) 245","D) 265"],ans:1,exp:"First part: 65 × 3 = 195. Second part: 50 × 2 = 100. Total: 195 + 100 = 295."},
+  {q:"A store sells 24 apples per bag. A customer buys 8 bags. At home, 15 apples are bad. How many good apples are left?",opts:["A) 177","B) 192","C) 207","D) 167"],ans:0,exp:"8 × 24 = 192 apples. 192 − 15 = 177 good apples."},
+  {q:"Marco earns $9 per hour. He worked 6 hours Monday, 4 hours Tuesday, and 5 hours Wednesday. How much did he earn?",opts:["A) $108","B) $117","C) $135","D) $126"],ans:2,exp:"Total hours: 6 + 4 + 5 = 15. Total earned: 15 × $9 = $135."},
+],
+area: [
+  {q:"What is the perimeter of a rectangle with length 18 cm and width 9 cm?",opts:["A) 27 cm","B) 54 cm","C) 162 cm","D) 36 cm"],ans:1,exp:"Perimeter = 2 × (length + width) = 2 × (18 + 9) = 2 × 27 = 54 cm."},
+  {q:"A square has a perimeter of 36 inches. What is the length of one side?",opts:["A) 6 inches","B) 9 inches","C) 12 inches","D) 18 inches"],ans:1,exp:"A square has 4 equal sides. 36 ÷ 4 = 9 inches per side."},
+  {q:"What is the area of a rectangle that is 14 feet long and 7 feet wide?",opts:["A) 42 sq ft","B) 84 sq ft","C) 98 sq ft","D) 21 sq ft"],ans:2,exp:"Area = length × width = 14 × 7 = 98 square feet."},
+  {q:"A rectangular garden has an area of 72 sq m and a length of 9 m. What is the width?",opts:["A) 7 m","B) 8 m","C) 9 m","D) 6 m"],ans:1,exp:"Area = l × w, so w = 72 ÷ 9 = 8 meters."},
+  {q:"A figure is made of two rectangles: one 5 cm × 4 cm and one 3 cm × 2 cm. What is the total area?",opts:["A) 20 sq cm","B) 6 sq cm","C) 26 sq cm","D) 14 sq cm"],ans:2,exp:"Area 1: 5 × 4 = 20 sq cm. Area 2: 3 × 2 = 6 sq cm. Total: 20 + 6 = 26 sq cm."},
+  {q:"A room is 12 feet wide and 15 feet long. What is the area?",opts:["A) 54 sq ft","B) 27 sq ft","C) 180 sq ft","D) 108 sq ft"],ans:2,exp:"Area = 12 × 15 = 180 square feet."},
+  {q:"What is the perimeter of a triangle with sides 8 cm, 6 cm, and 10 cm?",opts:["A) 48 cm","B) 24 cm","C) 28 cm","D) 14 cm"],ans:1,exp:"Perimeter = sum of all sides = 8 + 6 + 10 = 24 cm."},
+  {q:"A rectangle has a perimeter of 40 cm and a width of 8 cm. What is the length?",opts:["A) 24 cm","B) 12 cm","C) 32 cm","D) 5 cm"],ans:1,exp:"P = 2(l + w). 40 = 2(l + 8), so 20 = l + 8, and l = 12 cm."},
+  {q:"A square floor tile is 9 inches on each side. How many square inches does it cover?",opts:["A) 36 sq in","B) 81 sq in","C) 72 sq in","D) 18 sq in"],ans:1,exp:"Area = side × side = 9 × 9 = 81 square inches."},
+  {q:"A rectangular playground is 45 yd long and 30 yd wide. How much fencing is needed to go all the way around?",opts:["A) 135 yd","B) 150 yd","C) 1,350 yd","D) 75 yd"],ans:1,exp:"Perimeter = 2 × (45 + 30) = 2 × 75 = 150 yards."},
+  {q:"A rectangle has an area of 54 sq cm. If one side is 6 cm, what is the other side?",opts:["A) 7 cm","B) 8 cm","C) 9 cm","D) 10 cm"],ans:2,exp:"Width = area ÷ length = 54 ÷ 6 = 9 cm."},
+  {q:"What is the area of a square with a side length of 11 inches?",opts:["A) 44 sq in","B) 111 sq in","C) 121 sq in","D) 22 sq in"],ans:2,exp:"Area = 11 × 11 = 121 square inches."},
+  {q:"A rectangular rug is 8 ft by 12 ft. What is the perimeter?",opts:["A) 20 ft","B) 40 ft","C) 96 ft","D) 80 ft"],ans:1,exp:"P = 2 × (8 + 12) = 2 × 20 = 40 ft."},
+  {q:"A garden is 25 m long and 18 m wide. How much fencing is needed to go around it?",opts:["A) 43 m","B) 450 m","C) 86 m","D) 100 m"],ans:2,exp:"P = 2 × (25 + 18) = 2 × 43 = 86 m."},
+  {q:"A rectangular pool is 30 yd long and 12 yd wide. What is the area?",opts:["A) 84 sq yd","B) 360 sq yd","C) 42 sq yd","D) 420 sq yd"],ans:1,exp:"Area = 30 × 12 = 360 square yards."},
+  {q:"A regular pentagon has a perimeter of 45 cm. What is the length of each side?",opts:["A) 5 cm","B) 7 cm","C) 9 cm","D) 11 cm"],ans:2,exp:"A pentagon has 5 equal sides. 45 ÷ 5 = 9 cm per side."},
+  {q:"A rectangle has an area of 96 sq ft and a length of 12 ft. What is its perimeter?",opts:["A) 32 ft","B) 40 ft","C) 48 ft","D) 28 ft"],ans:1,exp:"Width = 96 ÷ 12 = 8 ft. Perimeter = 2 × (12 + 8) = 40 ft."},
+  {q:"A floor is 15 feet long and 9 feet wide. How many 1-foot square tiles are needed to cover it?",opts:["A) 24","B) 48","C) 135","D) 150"],ans:2,exp:"Area = 15 × 9 = 135 tiles."},
+  {q:"A composite figure is a 10 cm × 6 cm rectangle with a 3 cm × 3 cm square cut from one corner. What is the remaining area?",opts:["A) 60 sq cm","B) 57 sq cm","C) 51 sq cm","D) 69 sq cm"],ans:2,exp:"Rectangle: 10 × 6 = 60 sq cm. Remove square: 3 × 3 = 9 sq cm. Area: 60 − 9 = 51 sq cm."},
+  {q:"A running track is 120 m long and 65 m wide. What is the perimeter?",opts:["A) 185 m","B) 370 m","C) 7,800 m","D) 330 m"],ans:1,exp:"P = 2 × (120 + 65) = 2 × 185 = 370 m."},
+  {q:"A rectangle has a width of 7 cm and a perimeter of 34 cm. What is the length?",opts:["A) 10 cm","B) 20 cm","C) 27 cm","D) 14 cm"],ans:0,exp:"34 = 2(l + 7), so 17 = l + 7, and l = 10 cm."},
+  {q:"A square has an area of 64 square inches. What is its perimeter?",opts:["A) 8 inches","B) 16 inches","C) 32 inches","D) 64 inches"],ans:2,exp:"Side = √64 = 8 inches. Perimeter = 4 × 8 = 32 inches."},
+  {q:"A park is 400 yd by 250 yd. How much fencing is needed around the entire park?",opts:["A) 650 yd","B) 1,300 yd","C) 100,000 yd","D) 1,000 yd"],ans:1,exp:"P = 2 × (400 + 250) = 2 × 650 = 1,300 yards."},
+  {q:"A square field has a perimeter of 52 m. What is the area?",opts:["A) 13 sq m","B) 52 sq m","C) 169 sq m","D) 208 sq m"],ans:2,exp:"Side = 52 ÷ 4 = 13 m. Area = 13 × 13 = 169 sq m."},
+  {q:"A rectangular pool is 50 m × 20 m. Tiles cost $3 per sq m. How much does it cost to tile the bottom?",opts:["A) $210","B) $3,000","C) $1,000","D) $420"],ans:1,exp:"Area = 50 × 20 = 1,000 sq m. Cost = 1,000 × $3 = $3,000."},
+  {q:"A classroom floor is 9 m long and 7 m wide. A rug covers a 4 m × 3 m area. How much floor is NOT covered?",opts:["A) 63 sq m","B) 51 sq m","C) 12 sq m","D) 75 sq m"],ans:1,exp:"Floor: 9 × 7 = 63 sq m. Rug: 4 × 3 = 12 sq m. Uncovered: 63 − 12 = 51 sq m."},
+  {q:"Two identical 8 m × 5 m rectangles are placed end-to-end along the 5 m side. What is the perimeter of the new shape?",opts:["A) 80 m","B) 42 m","C) 40 m","D) 46 m"],ans:1,exp:"New shape: 16 m × 5 m. P = 2 × (16 + 5) = 2 × 21 = 42 m."},
+  {q:"Which dimensions give a rectangle with an area of 32 sq in?",opts:["A) 5 in × 6 in","B) 4 in × 8 in","C) 6 in × 6 in","D) 3 in × 9 in"],ans:1,exp:"4 × 8 = 32 sq in. The others give 30, 36, and 27."},
+  {q:"A path goes around a rectangular garden. The garden is 20 m long and 14 m wide. How long is the path?",opts:["A) 34 m","B) 68 m","C) 280 m","D) 48 m"],ans:1,exp:"Perimeter = 2 × (20 + 14) = 2 × 34 = 68 m."},
+  {q:"A floor tile is 4 in by 6 in. How many tiles are needed to cover a 48-in by 36-in floor?",opts:["A) 72","B) 108","C) 144","D) 54"],ans:0,exp:"Floor area: 48 × 36 = 1,728 sq in. Tile area: 4 × 6 = 24 sq in. Tiles needed: 1,728 ÷ 24 = 72."},
+],
+geometry: [
+  {q:"Which shape has exactly 2 pairs of parallel sides AND 4 right angles?",opts:["A) Trapezoid","B) Rhombus","C) Rectangle","D) Triangle"],ans:2,exp:"A rectangle has two pairs of parallel sides (opposite sides) and all four angles are 90°."},
+  {q:"A shape has 4 equal sides and 4 right angles. What is it?",opts:["A) Rhombus","B) Rectangle","C) Square","D) Trapezoid"],ans:2,exp:"A square has all 4 sides equal AND all 4 angles equal to 90°."},
+  {q:"How many lines of symmetry does a square have?",opts:["A) 2","B) 4","C) 6","D) 8"],ans:1,exp:"A square has 4 lines of symmetry: 2 through opposite midpoints, and 2 through opposite corners."},
+  {q:"What describes two lines that intersect at a right angle?",opts:["A) Parallel lines","B) Perpendicular lines","C) Diagonal lines","D) Obtuse lines"],ans:1,exp:"Perpendicular lines cross each other at exactly a 90° angle."},
+  {q:"A triangle has all three angles less than 90°. What type of triangle is it?",opts:["A) Obtuse","B) Acute","C) Right","D) Straight"],ans:1,exp:"An acute triangle has all three angles measuring less than 90°."},
+  {q:"A quadrilateral has exactly ONE pair of parallel sides. What is it?",opts:["A) Rectangle","B) Rhombus","C) Trapezoid","D) Square"],ans:2,exp:"A trapezoid has exactly one pair of parallel sides."},
+  {q:"Which type of triangle has exactly two equal sides?",opts:["A) Scalene","B) Equilateral","C) Isosceles","D) Obtuse"],ans:2,exp:"An isosceles triangle has exactly two sides of equal length."},
+  {q:"A shape has 4 equal sides, but the angles are NOT right angles. What shape is it?",opts:["A) Square","B) Rectangle","C) Rhombus","D) Trapezoid"],ans:2,exp:"A rhombus has all 4 sides equal, but its angles are not required to be 90°."},
+  {q:"How many lines of symmetry does an equilateral triangle have?",opts:["A) 1","B) 2","C) 3","D) 6"],ans:2,exp:"An equilateral triangle has 3 lines of symmetry — one from each vertex to the midpoint of the opposite side."},
+  {q:"Which best describes parallel lines?",opts:["A) Lines that cross at a right angle","B) Lines that are always the same distance apart and never meet","C) Lines that cross at any angle","D) Lines that curve toward each other"],ans:1,exp:"Parallel lines are always the same distance apart and will never intersect."},
+  {q:"Which shape has only 3 sides and 3 angles?",opts:["A) Quadrilateral","B) Pentagon","C) Triangle","D) Hexagon"],ans:2,exp:"A triangle has exactly 3 sides and 3 angles."},
+  {q:"A triangle has one angle that is exactly 90°. What type of triangle is it?",opts:["A) Acute","B) Obtuse","C) Right","D) Equilateral"],ans:2,exp:"A triangle with one 90° angle is a right triangle."},
+  {q:"How many sides does a hexagon have?",opts:["A) 5","B) 6","C) 7","D) 8"],ans:1,exp:"A hexagon has 6 sides and 6 angles."},
+  {q:"Which shape can have exactly 1 line of symmetry?",opts:["A) Square","B) Circle","C) Isosceles triangle","D) Equilateral triangle"],ans:2,exp:"An isosceles triangle (non-equilateral) has exactly 1 line of symmetry — through the vertex angle."},
+  {q:"Which pair of lines CANNOT intersect?",opts:["A) Perpendicular lines","B) Parallel lines","C) Intersecting lines","D) Crossing lines"],ans:1,exp:"Parallel lines never intersect, no matter how far they extend."},
+  {q:"A shape has 4 sides, all right angles, but NOT all sides equal. What is it?",opts:["A) Square","B) Rhombus","C) Rectangle","D) Trapezoid"],ans:2,exp:"A rectangle has 4 right angles, but opposite sides are equal — not all four sides."},
+  {q:"A triangle has one angle greater than 90°. What type of triangle is it?",opts:["A) Acute","B) Right","C) Obtuse","D) Equilateral"],ans:2,exp:"A triangle with one angle greater than 90° is an obtuse triangle."},
+  {q:"Which shape has NO lines of symmetry?",opts:["A) Square","B) Rectangle","C) Scalene triangle","D) Equilateral triangle"],ans:2,exp:"A scalene triangle has all different side lengths and angles — no lines of symmetry."},
+  {q:"Which is NOT a property of a square?",opts:["A) 4 equal sides","B) 4 right angles","C) Only 1 pair of parallel sides","D) 4 lines of symmetry"],ans:2,exp:"A square has 2 pairs of parallel sides, not just 1."},
+  {q:"What makes a rectangle different from a typical parallelogram?",opts:["A) A rectangle has 4 right angles","B) A rectangle has longer sides","C) A rectangle has only one pair of parallel sides","D) A rectangle has all equal sides"],ans:0,exp:"The key difference is that a rectangle has 4 right angles, while a typical parallelogram does not."},
+  {q:"How many vertices (corners) does a pentagon have?",opts:["A) 4","B) 5","C) 6","D) 8"],ans:1,exp:"A pentagon has 5 sides and 5 vertices."},
+  {q:"Two streets cross each other at a right angle. The streets are _____ to each other.",opts:["A) Parallel","B) Perpendicular","C) Diagonal","D) Identical"],ans:1,exp:"Streets that cross at right angles are perpendicular to each other."},
+  {q:"Which quadrilateral always has all 4 sides equal AND all 4 angles equal?",opts:["A) Rhombus","B) Rectangle","C) Parallelogram","D) Square"],ans:3,exp:"Only a square has all 4 sides equal AND all 4 angles equal to 90°."},
+  {q:"Which describes a scalene triangle?",opts:["A) 3 equal sides","B) 2 equal sides","C) No equal sides","D) At least 2 equal angles"],ans:2,exp:"A scalene triangle has no equal sides and no equal angles."},
+  {q:"A non-square rectangle has how many lines of symmetry?",opts:["A) 1","B) 2","C) 4","D) 0"],ans:1,exp:"A rectangle (non-square) has exactly 2 lines of symmetry — one horizontal and one vertical."},
+  {q:"Which of these shapes is a type of parallelogram?",opts:["A) Trapezoid","B) Triangle","C) Rhombus","D) Pentagon"],ans:2,exp:"A rhombus is a parallelogram with 4 equal sides."},
+  {q:"Which type of triangle has an angle measuring 95°?",opts:["A) Right","B) Obtuse","C) Acute","D) Equilateral"],ans:1,exp:"Since 95° > 90°, the triangle is obtuse."},
+  {q:"A figure has 8 equal sides and 8 equal angles. What is it called?",opts:["A) Hexagon","B) Heptagon","C) Octagon","D) Pentagon"],ans:2,exp:"A regular octagon has 8 equal sides and 8 equal angles."},
+  {q:"Which triangle has all three sides of different lengths?",opts:["A) Isosceles","B) Equilateral","C) Scalene","D) Right"],ans:2,exp:"A scalene triangle has three sides that are all different lengths."},
+  {q:"A rhombus and a rectangle are both parallelograms. What property do they share?",opts:["A) All 4 angles are 90°","B) All 4 sides are equal","C) 2 pairs of parallel sides","D) Exactly 2 lines of symmetry"],ans:2,exp:"As parallelograms, both a rhombus and a rectangle have 2 pairs of parallel sides."},
+],
+angles: [
+  {q:"An angle measures 45°. What type of angle is it?",opts:["A) Right angle","B) Obtuse angle","C) Acute angle","D) Straight angle"],ans:2,exp:"An acute angle measures less than 90°. Since 45° < 90°, it is acute."},
+  {q:"What is the measure of a straight angle?",opts:["A) 90°","B) 45°","C) 270°","D) 180°"],ans:3,exp:"A straight angle forms a straight line and always measures exactly 180°."},
+  {q:"An angle measures 127°. What type of angle is it?",opts:["A) Acute","B) Obtuse","C) Right","D) Straight"],ans:1,exp:"An obtuse angle measures between 90° and 180°. Since 90° < 127° < 180°, it is obtuse."},
+  {q:"Two angles together make a straight angle (180°). One measures 65°. What is the other?",opts:["A) 25°","B) 115°","C) 125°","D) 35°"],ans:1,exp:"180° − 65° = 115°."},
+  {q:"How many feet are in 3 yards?",opts:["A) 6 feet","B) 9 feet","C) 12 feet","D) 36 feet"],ans:1,exp:"There are 3 feet in 1 yard. 3 × 3 = 9 feet."},
+  {q:"48 inches is equal to how many feet?",opts:["A) 3 feet","B) 4 feet","C) 5 feet","D) 6 feet"],ans:1,exp:"There are 12 inches in 1 foot. 48 ÷ 12 = 4 feet."},
+  {q:"A movie starts at 2:45 PM and ends at 5:10 PM. How long is the movie?",opts:["A) 2 hours 15 min","B) 2 hours 25 min","C) 3 hours 5 min","D) 2 hours 35 min"],ans:1,exp:"From 2:45 to 4:45 = 2 hours. From 4:45 to 5:10 = 25 more minutes. Total: 2 hours 25 minutes."},
+  {q:"How many ounces are in 4 pounds?",opts:["A) 48 ounces","B) 64 ounces","C) 32 ounces","D) 56 ounces"],ans:1,exp:"There are 16 ounces in 1 pound. 4 × 16 = 64 ounces."},
+  {q:"Three angles sit on a straight line. Two measure 40° and 60°. What is the third?",opts:["A) 70°","B) 80°","C) 100°","D) 90°"],ans:1,exp:"Angles on a straight line add to 180°. 180° − 40° − 60° = 80°."},
+  {q:"An angle measures exactly 90°. What type of angle is it?",opts:["A) Acute angle","B) Obtuse angle","C) Straight angle","D) Right angle"],ans:3,exp:"A right angle measures exactly 90°. It is often shown with a small square symbol."},
+  {q:"What type of angle is formed by clock hands at 3:00?",opts:["A) Acute","B) Obtuse","C) Right","D) Straight"],ans:2,exp:"At 3:00, the clock hands form a 90° angle — a right angle."},
+  {q:"A 180° angle looks like:",opts:["A) A sharp pointed corner","B) A square corner","C) A straight line","D) A full circle"],ans:2,exp:"A 180° angle is a straight angle — it looks like a perfectly straight line."},
+  {q:"How many cups are in 3 quarts?",opts:["A) 6 cups","B) 8 cups","C) 12 cups","D) 16 cups"],ans:2,exp:"1 quart = 4 cups. 3 × 4 = 12 cups."},
+  {q:"A class period starts at 9:15 AM and ends at 10:05 AM. How long is the class?",opts:["A) 45 min","B) 50 min","C) 55 min","D) 1 hour"],ans:1,exp:"From 9:15 to 10:05: 45 minutes to reach 10:00, then 5 more minutes = 50 minutes."},
+  {q:"How many pints are in 2 gallons?",opts:["A) 8 pints","B) 16 pints","C) 4 pints","D) 32 pints"],ans:1,exp:"1 gallon = 8 pints. 2 × 8 = 16 pints."},
+  {q:"A right angle is divided into 3 equal parts. What is the measure of each part?",opts:["A) 25°","B) 30°","C) 45°","D) 60°"],ans:1,exp:"90° ÷ 3 = 30° each."},
+  {q:"How many inches are in 2 yards?",opts:["A) 24 inches","B) 36 inches","C) 72 inches","D) 6 inches"],ans:2,exp:"1 yard = 36 inches. 2 × 36 = 72 inches."},
+  {q:"A 90° angle is split into two parts. One part is 35°. What is the other?",opts:["A) 45°","B) 55°","C) 65°","D) 125°"],ans:1,exp:"90° − 35° = 55°."},
+  {q:"Which measurement is the longest?",opts:["A) 5 feet","B) 2 yards","C) 20 inches","D) 1 yard and 10 inches"],ans:1,exp:"Convert to inches: 5 ft=60 in, 2 yd=72 in, 20 in, 1 yd 10 in=46 in. 2 yards (72 in) is longest."},
+  {q:"What time is 45 minutes after 7:30 AM?",opts:["A) 7:75 AM","B) 8:15 AM","C) 8:05 AM","D) 8:25 AM"],ans:1,exp:"7:30 + 30 minutes = 8:00. 8:00 + 15 more minutes = 8:15 AM."},
+  {q:"How many pounds are in 48 ounces?",opts:["A) 2 pounds","B) 3 pounds","C) 4 pounds","D) 6 pounds"],ans:1,exp:"16 ounces = 1 pound. 48 ÷ 16 = 3 pounds."},
+  {q:"What is the measure of each angle in a square?",opts:["A) 45°","B) 60°","C) 90°","D) 180°"],ans:2,exp:"All four angles in a square measure 90°."},
+  {q:"A school day starts at 8:00 AM and ends at 3:30 PM. How long is the school day?",opts:["A) 6 hr 30 min","B) 7 hr 30 min","C) 7 hr","D) 6 hr"],ans:1,exp:"From 8:00 AM to 3:00 PM = 7 hours. Plus 30 more minutes = 7 hours 30 minutes."},
+  {q:"Three angles meet at a point to form a right angle. Two measure 32° and 41°. What is the third?",opts:["A) 7°","B) 17°","C) 27°","D) 37°"],ans:1,exp:"90° − 32° − 41° = 17°."},
+  {q:"A carpenter cuts a board at a 130° angle. What type of angle is this?",opts:["A) Acute","B) Right","C) Obtuse","D) Straight"],ans:2,exp:"130° is between 90° and 180°, so it is an obtuse angle."},
+  {q:"How many quarts are in 2 gallons?",opts:["A) 4 quarts","B) 8 quarts","C) 16 quarts","D) 2 quarts"],ans:1,exp:"1 gallon = 4 quarts. 2 × 4 = 8 quarts."},
+  {q:"A triangle has angles of 45°, 90°, and 45°. What type of triangle is it?",opts:["A) Acute","B) Obtuse","C) Right","D) Equilateral"],ans:2,exp:"Since it contains a 90° angle, it is a right triangle."},
+  {q:"What is 2 yards + 1 foot expressed in total feet?",opts:["A) 3 feet","B) 5 feet","C) 7 feet","D) 9 feet"],ans:2,exp:"2 yards = 6 feet. 6 + 1 = 7 feet."},
+  {q:"An angle measures 155°. How many more degrees would make it a straight angle?",opts:["A) 15°","B) 25°","C) 35°","D) 45°"],ans:1,exp:"180° − 155° = 25°."},
+  {q:"How many feet are in 1 mile?",opts:["A) 1,000","B) 1,760","C) 5,280","D) 2,640"],ans:2,exp:"1 mile = 5,280 feet."},
+],
+data: [
+  {q:"A data set: 23, 25, 28, 31, 34, 34, 37. What is the mode?",opts:["A) 23","B) 34","C) 37","D) 28"],ans:1,exp:"The mode is the value that appears most often. 34 appears twice; all others once."},
+  {q:"Scores: 72, 72, 75, 78, 78, 78, 82. What is the range?",opts:["A) 6","B) 10","C) 78","D) 7"],ans:1,exp:"Range = highest − lowest = 82 − 72 = 10."},
+  {q:"Carlos earns $120 per week. He spends $45 on food and $30 on transportation. How much does he save?",opts:["A) $55","B) $45","C) $75","D) $65"],ans:1,exp:"$120 − $45 − $30 = $45 saved each week."},
+  {q:"A lemonade stand earns $48 in sales. Supplies cost $17. What is the profit?",opts:["A) $65","B) $31","C) $21","D) $41"],ans:1,exp:"Profit = income − expenses = $48 − $17 = $31."},
+  {q:"Which of the following is a FIXED expense?",opts:["A) Electricity bill","B) Monthly rent payment","C) Groceries","D) Entertainment"],ans:1,exp:"A fixed expense stays the same every month. Monthly rent does not change."},
+  {q:"Frequency table: Red=12, Blue=8, Green=15, Yellow=5. How many more students chose Green than Blue?",opts:["A) 3","B) 5","C) 7","D) 23"],ans:2,exp:"15 − 8 = 7 more students chose Green than Blue."},
+  {q:"8 chose soccer, 5 basketball, 3 tennis, 4 swimming. What fraction chose soccer?",opts:["A) 8/20","B) 8/12","C) 5/20","D) 8/16"],ans:0,exp:"Total: 8+5+3+4 = 20. Fraction for soccer: 8/20."},
+  {q:"Maria wants to save $150 for a gift. She saves $25 each week. How many weeks will it take?",opts:["A) 4 weeks","B) 5 weeks","C) 6 weeks","D) 7 weeks"],ans:2,exp:"$150 ÷ $25 = 6 weeks."},
+  {q:"Dot plot scores: 85, 87, 87, 90, 90, 90, 92, 95. What is the mode?",opts:["A) 85","B) 87","C) 90","D) 92"],ans:2,exp:"The mode is the most frequent value. 90 appears 3 times."},
+  {q:"A family earns $3,500/month. They spend $1,200 rent, $400 food, $150 utilities, $200 transportation. How much is left?",opts:["A) $1,550","B) $1,950","C) $1,350","D) $2,150"],ans:0,exp:"$3,500 − $1,200 − $400 − $150 − $200 = $1,550."},
+  {q:"A bar graph shows: Math=25, Science=18, Reading=22, Art=15. Which subject had the most votes?",opts:["A) Science","B) Reading","C) Math","D) Art"],ans:2,exp:"Math has 25 votes, which is the highest number."},
+  {q:"Scores recorded: 88, 92, 88, 75, 95, 88, 70. What is the mode?",opts:["A) 75","B) 88","C) 92","D) 95"],ans:1,exp:"88 appears 3 times — more than any other score."},
+  {q:"Stem-and-leaf: 2|3 5 7, 3|1 2 8, 4|0 4. What is the range?",opts:["A) 7","B) 17","C) 21","D) 40"],ans:2,exp:"Min = 23, Max = 44. Range = 44 − 23 = 21."},
+  {q:"David earns $85 per week mowing lawns. He spends $20 on supplies. What is his weekly profit?",opts:["A) $105","B) $65","C) $80","D) $45"],ans:1,exp:"Profit = earnings − expenses = $85 − $20 = $65."},
+  {q:"Which is a VARIABLE expense?",opts:["A) Monthly car payment","B) Yearly insurance premium","C) Monthly rent","D) Weekly grocery bill"],ans:3,exp:"Groceries vary week to week, making them a variable expense."},
+  {q:"Dot plot: 4, 4, 5, 5, 5, 6, 7. What is the mode?",opts:["A) 4","B) 5","C) 6","D) 7"],ans:1,exp:"5 appears 3 times — more than any other value."},
+  {q:"Monthly income: $4,200. Fixed expenses: $2,400. Variable expenses: $900. How much is left for savings?",opts:["A) $600","B) $900","C) $1,200","D) $1,800"],ans:1,exp:"$4,200 − $2,400 − $900 = $900 for savings."},
+  {q:"Books read: 0 books=3 students, 1 book=7, 2 books=5, 3 books=5. How many students total?",opts:["A) 15","B) 17","C) 20","D) 25"],ans:2,exp:"3 + 7 + 5 + 5 = 20 students."},
+  {q:"A store buys items for $4 each and sells them for $7. If it sells 50 items, what is the total profit?",opts:["A) $150","B) $200","C) $350","D) $50"],ans:0,exp:"Profit per item: $7 − $4 = $3. Total: 50 × $3 = $150."},
+  {q:"What is the range of: 14, 22, 9, 31, 18, 25?",opts:["A) 16","B) 22","C) 9","D) 31"],ans:1,exp:"Range = max − min = 31 − 9 = 22."},
+  {q:"Pictograph: Mon=4 stars, Tue=6, Wed=3. Each star = 5 students. How many students total?",opts:["A) 13 students","B) 55 students","C) 65 students","D) 26 students"],ans:2,exp:"Total stars: 4+6+3=13. Total students: 13 × 5 = 65."},
+  {q:"A student wants to buy a $48 video game. She saves $6 per week. How many weeks does she need?",opts:["A) 6 weeks","B) 7 weeks","C) 8 weeks","D) 9 weeks"],ans:2,exp:"$48 ÷ $6 = 8 weeks."},
+  {q:"A company spends $2,400 on materials and earns $3,750 in sales. What is the profit?",opts:["A) $6,150","B) $1,250","C) $1,350","D) $1,150"],ans:2,exp:"$3,750 − $2,400 = $1,350."},
+  {q:"Stem-and-leaf: 5|2 4 8, 6|1 3 3 7. What is the mode?",opts:["A) 54","B) 58","C) 63","D) 67"],ans:2,exp:"63 appears twice — more than any other value."},
+  {q:"A school raised: $245 in Month 1, $312 in Month 2, $198 in Month 3. What is the total?",opts:["A) $655","B) $715","C) $755","D) $685"],ans:2,exp:"$245 + $312 + $198 = $755."},
+  {q:"Jenna has $120. She spends 1/4 on clothes and $15 on food. How much does she have left?",opts:["A) $60","B) $75","C) $90","D) $45"],ans:1,exp:"1/4 of $120 = $30 on clothes. $30 + $15 = $45 spent. $120 − $45 = $75 left."},
+  {q:"Which shows how to find PROFIT from a sale?",opts:["A) Income + Expenses","B) Income − Expenses","C) Expenses − Income","D) Income × Expenses"],ans:1,exp:"Profit = Income − Expenses."},
+  {q:"Dot plot heights (inches): 48, 48, 50, 51, 51, 51, 53, 54. What is the range?",opts:["A) 3","B) 5","C) 6","D) 51"],ans:2,exp:"Range = 54 − 48 = 6."},
+  {q:"Store owner pays $600 fixed rent and ~$350 variable supplies. In March the store earns $1,200. What is the profit?",opts:["A) $250","B) $600","C) $550","D) $850"],ans:0,exp:"$1,200 − $600 − $350 = $250."},
+  {q:"25 students chose favorite colors: Red=8, Blue=10, Green=7. What fraction chose Blue?",opts:["A) 10/35","B) 2/5","C) 1/3","D) 10/20"],ans:1,exp:"10 out of 25 = 10/25 = 2/5."},
+]
+};
+
+const TOPICS = [
+  {id:"place_value", label:"Place Value",            sub:"Numbers to 1 billion",      cat:"Category 1",   teks:"TEKS 4.2B · 4.2G", emoji:"🔢", bg:"#EEF4FF", border:"#93C5FD", accent:"#1D4ED8", light:"#DBEAFE"},
+  {id:"fractions",   label:"Fractions & Decimals",   sub:"Parts and equivalents",     cat:"Category 1/2", teks:"TEKS 4.3D · 4.3E", emoji:"🍕", bg:"#F0FDF4", border:"#86EFAC", accent:"#15803D", light:"#DCFCE7"},
+  {id:"multiply",    label:"Multiplication & Division", sub:"Multi-digit computation",cat:"Category 2",   teks:"TEKS 4.4A · 4.4H", emoji:"✖️", bg:"#FFFBEB", border:"#FCD34D", accent:"#B45309", light:"#FEF3C7"},
+  {id:"wordprob",    label:"Word Problems",           sub:"Multi-step situations",     cat:"Category 2",   teks:"TEKS 4.5A · 4.5B", emoji:"📝", bg:"#FFF7ED", border:"#FDBA74", accent:"#C2410C", light:"#FFEDD5"},
+  {id:"area",        label:"Perimeter & Area",        sub:"Measure shapes",            cat:"Category 3",   teks:"TEKS 4.5D",        emoji:"📐", bg:"#F0FDFA", border:"#5EEAD4", accent:"#0F766E", light:"#CCFBF1"},
+  {id:"geometry",    label:"Geometry",                sub:"Shapes, lines & symmetry",  cat:"Category 3",   teks:"TEKS 4.6D · 4.7C", emoji:"🔷", bg:"#FAF5FF", border:"#C084FC", accent:"#7E22CE", light:"#F3E8FF"},
+  {id:"angles",      label:"Angles & Measurement",    sub:"Protractors & degrees",     cat:"Category 3",   teks:"TEKS 4.7D · 4.8C", emoji:"📏", bg:"#FFF1F2", border:"#FDA4AF", accent:"#BE123C", light:"#FFE4E6"},
+  {id:"data",        label:"Data & Financial Literacy",sub:"Graphs, charts & money",   cat:"Category 4",   teks:"TEKS 4.9A · 4.10", emoji:"📊", bg:"#ECFDF5", border:"#6EE7B7", accent:"#065F46", light:"#D1FAE5"},
+];
+
+function shuffle(arr) {
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+function pick5(id){return shuffle(QUESTION_BANK[id]).slice(0,5);}
+function pickMixed(ids, count){
+  // Pull all questions from selected topics, tag each with its topic, shuffle, take `count`
+  const pool=ids.flatMap(id=>{
+    const t=TOPICS.find(x=>x.id===id);
+    return QUESTION_BANK[id].map(q=>({...q,_t:t}));
+  });
+  return shuffle(pool).slice(0,count);
+}
+
+const S={
+  screen:"home",
+  topic:null,          // single-topic mode
+  mixIds:[],           // selected topic IDs for mix screen
+  mixCount:10,         // chosen question count for mixed round
+  questions:[],
+  qi:0,sel:null,revealed:false,score:0
+};
+function set(p){Object.assign(S,p);draw();}
+
+function startTopic(t){
+  const qs=pick5(t.id).map(q=>({...q,_t:t}));
+  set({screen:"quiz",topic:t,questions:qs,qi:0,sel:null,revealed:false,score:0});
+}
+function startMixed(){
+  if(S.mixIds.length<2)return;
+  const qs=pickMixed(S.mixIds,S.mixCount);
+  set({screen:"quiz",topic:null,questions:qs,qi:0,sel:null,revealed:false,score:0});
+}
+function toggleMixId(id){
+  const ids=S.mixIds.includes(id)?S.mixIds.filter(x=>x!==id):[...S.mixIds,id];
+  set({mixIds:ids});
+}
+function choose(i){if(!S.revealed)set({sel:i,revealed:true,score:S.score+(i===S.questions[S.qi].ans?1:0)});}
+function advance(){S.qi+1>=S.questions.length?set({screen:"results"}):set({qi:S.qi+1,sel:null,revealed:false});}
+
+// ── Home ───────────────────────────────────────────────────────────────
+function htmlHome(){
+  const cards=TOPICS.map(t=>`
+    <button class="topic-card" data-id="${t.id}" style="background:${t.bg};border-color:${t.border}">
+      <div class="tc-emoji">${t.emoji}</div>
+      <div class="tc-name">${t.label}</div>
+      <div class="tc-sub">${t.sub}</div>
+      <div class="tc-badge" style="color:${t.accent};border-color:${t.border}">${t.cat}</div>
+    </button>`).join("");
+  return `<div class="home-header">
+    <div class="star">⭐</div>
+    <h1>4th Grade STAAR Math</h1>
+    <p>Pick a single topic — or mix multiple topics in one round!</p>
+  </div>
+  <div class="topic-grid">${cards}</div>
+  <div style="margin-top:16px;text-align:center">
+    <button id="mixBtn" style="background:#4F46E5;color:white;border:none;border-radius:14px;padding:14px 32px;font-size:16px;font-family:'Fredoka',cursive;font-weight:600;cursor:pointer;box-shadow:0 4px 14px rgba(79,70,229,0.35)">
+      🎲 Mix Multiple Topics
+    </button>
+  </div>
+  <p class="home-footer">240 questions total &middot; Aligned to 2021–2025 STAAR Released Tests &middot; Texas TEKS</p>`;
+}
+
+// ── Mix picker ─────────────────────────────────────────────────────────
+function htmlMix(){
+  const cards=TOPICS.map(t=>{
+    const sel=S.mixIds.includes(t.id);
+    return `<button class="mix-card${sel?" selected":""}" data-id="${t.id}"
+        style="${sel?`border-color:${t.accent};background:${t.bg}`:""}">
+      <div class="check">${sel?"✓":""}</div>
+      <div class="mc-emoji">${t.emoji}</div>
+      <div class="mc-name">${t.label}</div>
+    </button>`;
+  }).join("");
+  const counts=[5,10,15,20];
+  const cntBtns=counts.map(n=>`<button class="cnt-btn${S.mixCount===n?" active":""}" data-cnt="${n}">${n}</button>`).join("");
+  const canStart=S.mixIds.length>=2;
+  return `
+  <div class="mix-header">
+    <div style="font-size:40px;margin-bottom:8px">🎲</div>
+    <h2>Mix Topics</h2>
+    <p>Select 2 or more topics, then choose how many questions.</p>
+  </div>
+  <div class="mix-controls">
+    <button class="mix-ctrl-btn" id="selAll">Select All</button>
+    <button class="mix-ctrl-btn" id="selClear">Clear</button>
+  </div>
+  <div class="mix-grid">${cards}</div>
+  <div class="mix-count-row">
+    <p>How many questions?</p>
+    <div class="mix-count-btns">${cntBtns}</div>
+  </div>
+  <button class="mix-start-btn" id="mixStart" ${canStart?"":"disabled"}>
+    ${canStart?`Start Mixed Quiz (${S.mixIds.length} topics, ${S.mixCount} questions) →`:"Select at least 2 topics to start"}
+  </button>
+  <button class="mix-back-btn" id="mixBack">← Back to Topics</button>`;
+}
+
+// ── Quiz ───────────────────────────────────────────────────────────────
+function htmlQuiz(){
+  const q=S.questions[S.qi];
+  const t=q._t;  // current question's topic (always present)
+  const isMixed=!S.topic;
+  const barColor=isMixed?"#4F46E5":t.accent;
+  const pct=(S.qi/S.questions.length)*100;
+
+  const topicTag=isMixed?`<div class="q-topic-tag" style="color:${t.accent};border-color:${t.border}">${t.emoji} ${t.label}</div>`:"";
+
+  const opts=q.opts.map((opt,i)=>{
+    let cls="option-btn",extra="",pre="";
+    if(S.revealed){
+      if(i===q.ans){cls+=" correct";pre="✓ ";}
+      else if(i===S.sel){cls+=" wrong";pre="✗ ";}
+    }else if(i===S.sel)extra=`style="background:${t.light};border-color:${t.accent}"`;
+    return `<button class="${cls}" ${extra} data-i="${i}" ${S.revealed?"disabled":""}>${pre}${opt}</button>`;
+  }).join("");
+
+  const fb=S.revealed?`
+    <div class="feedback ${S.sel===q.ans?"correct-fb":"wrong-fb"}">
+      <div class="feedback-title">${S.sel===q.ans?"🎉 Correct!":"❌ Not quite!"}</div>
+      <div class="feedback-exp">${q.exp}</div>
+    </div>
+    <button id="nxt" class="next-btn" style="background:${barColor};box-shadow:0 4px 14px ${barColor}55">
+      ${S.qi+1>=S.questions.length?"See My Results →":"Next Question →"}
+    </button>`:"";
+
+  const topbarLabel=isMixed
+    ?`<span class="topic-label" style="color:#4F46E5">🎲 Mixed Topics</span>`
+    :`<span class="topic-label" style="color:${t.accent}">${t.emoji} ${t.label}</span>`;
+
+  return `
+    <div class="quiz-topbar">
+      <button id="bk" class="back-btn">← Topics</button>
+      ${topbarLabel}
+      <span class="score-label">⭐ ${S.score}</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${barColor}"></div></div>
+    <p class="q-counter">QUESTION ${S.qi+1} OF ${S.questions.length}</p>
+    ${topicTag}
+    <div class="question-card" style="background:${t.bg};border-color:${t.border}">${q.q}</div>
+    <div class="options">${opts}</div>${fb}`;
+}
+
+// ── Results ────────────────────────────────────────────────────────────
+function htmlResults(){
+  const n=S.questions.length;
+  const pct=Math.round(S.score/n*100);
+  const isMixed=!S.topic;
+  const stars=pct===100?3:pct>=60?2:pct>=20?1:0;
+  const icons=["💪","👍","🌟","🏆"];
+  const msg=pct===100?"Perfect score! You're a math superstar! 🌠"
+    :pct>=80?"Amazing work! Almost perfect! 🚀"
+    :pct>=60?"Good job! Keep practicing! 💪"
+    :pct>=20?"Nice try! Review and try again! 📚"
+    :"Don't give up — practice makes perfect! 🌱";
+
+  if(isMixed){
+    const chips=S.mixIds.map(id=>{
+      const t=TOPICS.find(x=>x.id===id);
+      return `<span class="mixed-topic-chip" style="color:${t.accent};border-color:${t.border}">${t.emoji} ${t.label}</span>`;
+    }).join("");
+    return `<div class="results-screen">
+      <div class="results-card" style="background:#F5F3FF;border-color:#A5B4FC;box-shadow:0 8px 32px rgba(79,70,229,0.15)">
+        <div class="results-icon">${icons[stars]}</div>
+        <h2 class="results-score">${S.score} out of ${n}!</h2>
+        <div class="results-stars">${"⭐".repeat(stars)}${"☆".repeat(3-stars)}</div>
+        <div class="results-pct" style="color:#4338CA;border-color:#A5B4FC">${pct}%</div>
+        <p class="results-msg">${msg}</p>
+        <div class="mixed-topics-list">${chips}</div>
+        <div class="results-btns">
+          <button id="retry" class="retry-btn" style="background:#4F46E5;box-shadow:0 4px 14px rgba(79,70,229,0.4)">Try Same Mix Again 🔄</button>
+          <button id="remix" class="home-btn" style="border-color:#C7D2FE;color:#4338CA">Change Topics 🎲</button>
+          <button id="home" class="home-btn">Back to All Topics ↩</button>
+        </div>
+      </div>
+      <p class="results-teks">🎲 Mixed Mode &middot; ${S.mixIds.length} topics &middot; ${n} questions</p>
+    </div>`;
+  }
+
+  const t=S.topic;
+  return `<div class="results-screen">
+    <div class="results-card" style="background:${t.bg};border-color:${t.border};box-shadow:0 8px 32px ${t.accent}22">
+      <div class="results-icon">${icons[stars]}</div>
+      <h2 class="results-score">${S.score} out of ${n}!</h2>
+      <div class="results-stars">${"⭐".repeat(stars)}${"☆".repeat(3-stars)}</div>
+      <div class="results-pct" style="color:${t.accent};border-color:${t.border}">${pct}%</div>
+      <p class="results-msg">${msg}</p>
+      <div class="results-btns">
+        <button id="retry" class="retry-btn" style="background:${t.accent};box-shadow:0 4px 14px ${t.accent}44">Try ${t.label} Again 🔄</button>
+        <button id="home" class="home-btn">Choose a Different Topic ↩</button>
+      </div>
+    </div>
+    <p class="results-teks">${t.emoji} ${t.label} &middot; ${t.teks}</p>
+  </div>`;
+}
+
+// ── Event wiring ───────────────────────────────────────────────────────
+function wire(){
+  if(S.screen==="home"){
+    document.querySelectorAll(".topic-card").forEach(b=>b.onclick=()=>{
+      const t=TOPICS.find(x=>x.id===b.dataset.id);if(t)startTopic(t);
+    });
+    document.getElementById("mixBtn").onclick=()=>set({screen:"mix"});
+  }
+  if(S.screen==="mix"){
+    document.querySelectorAll(".mix-card").forEach(b=>b.onclick=()=>toggleMixId(b.dataset.id));
+    document.querySelectorAll(".cnt-btn").forEach(b=>b.onclick=()=>set({mixCount:+b.dataset.cnt}));
+    document.getElementById("selAll").onclick=()=>set({mixIds:TOPICS.map(t=>t.id)});
+    document.getElementById("selClear").onclick=()=>set({mixIds:[]});
+    document.getElementById("mixStart").onclick=startMixed;
+    document.getElementById("mixBack").onclick=()=>set({screen:"home"});
+  }
+  if(S.screen==="quiz"){
+    document.getElementById("bk").onclick=()=>set({screen:S.topic?"home":"mix"});
+    document.getElementById("nxt")?.addEventListener("click",advance);
+    document.querySelectorAll(".option-btn:not([disabled])").forEach(b=>b.onclick=()=>choose(+b.dataset.i));
+  }
+  if(S.screen==="results"){
+    document.getElementById("retry").onclick=()=>S.topic?startTopic(S.topic):startMixed();
+    document.getElementById("remix")?.addEventListener("click",()=>set({screen:"mix"}));
+    document.getElementById("home").onclick=()=>set({screen:"home"});
+  }
+}
+
+function draw(){
+  const fn={home:htmlHome,mix:htmlMix,quiz:htmlQuiz,results:htmlResults};
+  document.getElementById("app").innerHTML=(fn[S.screen]||htmlHome)();
+  wire();
+}
+draw();
+</script>
+</body>
+</html>
